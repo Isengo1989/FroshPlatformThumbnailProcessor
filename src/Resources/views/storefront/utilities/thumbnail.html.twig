@@ -1,6 +1,7 @@
 {% if not shopware.config.FroshPlatformThumbnailProcessor.config.FixListingThumbnailSizes %}
     {{ include('@Storefront/storefront/utilities/thumbnail.html.twig') }}
 {% else %}
+{# 2020-09-28: Changed sw_encode_media_url to use url #}
 
 {# activate load per default. If it is not activated only a data-src is set instead of the src tag. #}
 {% if load is not defined %}
@@ -33,7 +34,7 @@
 
     {# generate srcset with all available thumbnails #}
     {% set srcsetValue %}{% apply spaceless %}
-        {{ media|sw_encode_media_url }} {{ thumbnails|first.width + 1 }}w, {% for thumbnail in thumbnails %}{{ thumbnail.url | sw_encode_url }} {{ thumbnail.width }}w{% if not loop.last %}, {% endif %}{% endfor %}
+        {{ media.url }} {{ thumbnails|first.width + 1 }}w, {% for thumbnail in thumbnails %}{{ thumbnail.url }} {{ thumbnail.width }}w{% if not loop.last %}, {% endif %}{% endfor %}
     {% endapply %}{% endset %}
 
     {# generate sizes #}
@@ -57,7 +58,7 @@
     {% endif %}
 
     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-        data-src="{{ media|sw_encode_media_url }}"
+        data-src="{{ media.url }}"
         {% if media.thumbnails|length > 0 %}
             data-srcset="{{ srcsetValue }}"
             {% if sizes['default'] %}
@@ -69,7 +70,7 @@
         {% for key, value in attributes %}{% if value != '' %} {{ key }}="{{ value }}"{% endif %}{% endfor %}
     />
 {% else %}
-    <img data-src="{{ media|sw_encode_media_url }}"
+    <img data-src="{{ media.url }}"
         {% if media.thumbnails|length > 0 %}
             data-srcset="{{ srcsetValue }}"
             {% if sizes['default'] %}
